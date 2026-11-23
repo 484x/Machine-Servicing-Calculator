@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1421">
+  <meta name="description" content="MEIE3292 interactive Random and Synchronous Servicing calculator. Enter your own data, compare machine assignments and inspect step-by-step calculations.">
+  <title>Machine Servicing Calculator | MEIE3292</title>
+  <style>
+    :root{color-scheme:dark;--bg:#09121f;--surface:#121f30;--surface2:#17263a;--ink:#f5f9ff;--muted:#a3b5cb;--line:#314158;--a:#61e7bb;--b:#88baff;--red:#ffadad;--yellow:#fbd18a}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 7% -6%,#163d44 0,transparent 36%),radial-gradient(circle at 98% 4%,#1a2c50 0,transparent 36%),var(--bg)}
+    button,input,select{font:inherit} button{cursor:pointer} button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #73d9ff;outline-offset:3px}
+    .wrap{width:min(1210px,100%);margin:auto;padding:34px 22px 75px}.eyebrow{display:flex;align-items:center;gap:9px;color:var(--a);text-transform:uppercase;font-weight:800;letter-spacing:.15em;font-size:11px}.dot{width:9px;height:9px;background:var(--a);border-radius:50%;box-shadow:0 0 18px var(--a)}
+    h1{font-size:clamp(30px,4vw,51px);letter-spacing:-.055em;line-height:1.1;margin:12px 0}h1 span{color:var(--a)}.lead{max-width:810px;color:var(--muted);font-size:15px;line-height:1.7;margin:0 0 25px}
+    .tabs{display:flex;gap:8px;padding:7px;border-radius:16px;background:#112036;border:1px solid #34455c;max-width:560px;margin-bottom:25px}.tab{flex:1;border:0;border-radius:11px;background:transparent;color:#aabbd1;font-size:14px;font-weight:800;padding:12px 14px;transition:background .2s,color .2s}.tab[aria-selected=true]{background:#24544e;color:#a6ffe0;box-shadow:0 2px 15px #0312124a}.tab:hover:not([aria-selected=true]){color:#e2f2ff;background:#263a53}
+    .layout{display:grid;grid-template-columns:338px minmax(0,1fr);gap:19px;align-items:start}.panel{background:linear-gradient(155deg,#18273c,#112033 82%);border:1px solid var(--line);border-radius:19px;box-shadow:0 16px 42px #01081330;overflow:hidden}.panel-pad{padding:23px}.form-panel{position:sticky;top:14px}h2{font-size:17px;letter-spacing:-.02em;line-height:1.35;margin:0 0 5px}h3{font-size:14px;margin:0 0 8px}.small{font-size:12px;color:var(--muted);margin:0;line-height:1.6}.rule{margin:21px 0 18px;border:0;border-top:1px solid var(--line)}
+    .form-section-title{font-size:11px;font-weight:850;letter-spacing:.1em;text-transform:uppercase;color:#80d7c0;margin:0 0 12px}.field{margin-bottom:15px}.field label{display:flex;align-items:center;gap:7px;color:#e0eaf7;font-size:12px;font-weight:700;margin-bottom:7px}.help{font-size:11px;color:#91a9c2;line-height:1.45;margin-top:5px}.input-box{display:flex;align-items:center;gap:9px;padding:0 12px;background:#0c192a;border:1px solid #3a4c63;border-radius:10px;transition:border-color .2s}.input-box:focus-within{border-color:var(--a);box-shadow:0 0 0 3px #61e7bb20}.input-box input,.input-box select{min-width:0;width:100%;background:transparent;color:var(--ink);border:0;outline:none;font-size:15px;padding:12px 0}.input-box select{cursor:pointer;appearance:auto}.unit{font-size:11px;color:#91a9c2;white-space:nowrap}option{background:#14253a;color:white}input[type=number]{appearance:textfield;-moz-appearance:textfield}input::-webkit-inner-spin-button,input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+    .qbar{display:flex;align-items:center;justify-content:space-between;border:1px solid #286456;background:#143b36;color:#c6eee0;border-radius:11px;padding:10px 12px;margin:0 0 17px;font-size:12px}.qbar b{font-size:16px;color:#8df2c8}
+    .btn-row{display:flex;gap:10px;margin-top:18px}.btn{border-radius:10px;padding:12px;font-weight:800;font-size:12px;border:1px solid transparent}.primary{flex:1;background:var(--a);color:#08251b}.primary:hover{background:#a2f5d6}.secondary{background:#283c53;border-color:#3a5069;color:#e7f2ff}.secondary:hover{background:#3b5069}.error{display:none;border:1px solid #9e454d;background:#55272d;color:#ffd3d3;padding:11px;border-radius:10px;margin:0 0 12px;font-size:12px}
+    .results{display:grid;gap:17px}.hero{padding:24px;border-radius:20px;border:1px solid #368475;background:linear-gradient(125deg,#123d40 0,#12323d 58%,#182a3d 100%);display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,.75fr);gap:14px;align-items:center}.overline{color:#a0d9d0;font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:800}.hero .big{font-size:clamp(42px,5vw,61px);line-height:1.05;letter-spacing:-.055em;font-weight:850;margin:8px 0}.big small{font-size:16px;letter-spacing:0;color:#c8eade}.hero-note{font-size:12px;color:#c1dadd;line-height:1.6;margin:0}.hero-card{background:#0a292c86;border:1px solid #2d7067;padding:16px;border-radius:14px}.hero-card .value{font-size:clamp(22px,2.9vw,30px);font-weight:800;letter-spacing:-.035em;margin:5px 0}.hero-card .caption{color:#a7d5cf;font-size:11px;line-height:1.4}
+    .metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.metric{background:var(--surface);border:1px solid var(--line);padding:17px;border-radius:14px;min-width:0}.metric .label{color:var(--muted);font-size:11.5px;line-height:1.5}.metric .value{font-size:clamp(17px,2vw,23px);font-weight:800;margin-top:8px;overflow-wrap:anywhere}.section-head{display:flex;justify-content:space-between;gap:10px;align-items:start;margin-bottom:15px}.badge{display:inline-block;font-weight:800;font-size:10px;border-radius:30px;color:#a4f9d5;background:#20524a;padding:3px 8px;vertical-align:middle;margin-left:5px}
+    .chart{display:grid;gap:11px;max-height:390px;overflow-y:auto;padding-right:3px}.chart-row{display:grid;grid-template-columns:78px minmax(0,1fr) minmax(72px,100px);gap:12px;align-items:center;font-size:12px}.chart-row .left{color:#bcd1e8}.chart-row .right{text-align:right;font-variant-numeric:tabular-nums;color:#dbe8f6}.chart-row.win .right{font-weight:800;color:var(--a)}.track{height:17px;border:1px solid #243b52;background:#0b1b2d;border-radius:6px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#507dab,#8fbce7);border-radius:5px}.fill.win{background:linear-gradient(90deg,#199b81,#6cf0c1)}
+    .table-scroll{overflow:auto;max-height:520px}table{border-collapse:collapse;width:100%;white-space:nowrap;font-size:12px;text-align:left}th{background:#101e30;color:#abc1d8;font-weight:800;font-size:11px}th,td{padding:12px 13px;border-bottom:1px solid #2c3d52}tbody tr:last-child td{border-bottom:0}tbody tr.row{cursor:pointer}tbody tr.row:hover{background:#263b50}tbody tr.row.chosen{background:#1d4544}tbody tr.row.best td:first-child,tbody tr.row.best td:last-child{color:#8af3c7;font-weight:800}tbody tr.row:focus-visible{outline:2px solid var(--a);outline-offset:-2px}
+    .section-actions{display:flex;gap:7px}.sm-btn{border:1px solid #42566e;background:#253a50;color:#deedfb;padding:7px 10px;border-radius:9px;font-size:11px;font-weight:800}.sm-btn:hover{background:#354d67}.selectbox{background:#0d1c2e;border:1px solid #40516c;border-radius:9px;color:var(--ink);font-size:12px;padding:8px 10px;max-width:155px}
+    .formula{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.85;font-size:12px;background:#0b192b;border:1px solid #314861;border-radius:11px;padding:15px;color:#deedfd;margin-top:15px}.callout{font-size:12px;line-height:1.65;color:#b4cade;background:#12283e;border:1px solid #2d4660;border-radius:10px;padding:12px 14px;margin-top:14px}.foot{margin-top:24px;color:#8fa9c4;font-size:11.5px;line-height:1.7;max-width:1000px}.foot strong{color:#c5d8e8}.foot a{color:#a0dcff}
+    [hidden]{display:none!important}.faux-hidden{display:none}.mode-group{display:block}.note-text{color:#a9bed6;font-size:12px;line-height:1.6;margin-top:12px}
+    @media(max-width:980px){.layout{grid-template-columns:1fr}.form-panel{position:static}.form-fields,.shared-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:18px}.qbar{align-self:center}.field{margin-bottom:14px}}
+    @media(max-width:600px){.wrap{padding:21px 13px 48px}.panel-pad{padding:16px}.form-fields,.shared-fields{display:block}.hero{grid-template-columns:1fr}.metrics{grid-template-columns:1fr}.tab{font-size:12px;padding:11px 7px}.chart-row{grid-template-columns:65px 1fr 79px;gap:7px}.btn-row{position:static}.section-head{flex-wrap:wrap}.hero .big{font-size:47px}}
+    @media print{body{background:white;color:#111}.wrap{max-width:none;padding:0}.tabs,.form-panel,.sm-btn,.foot{display:none!important}.layout{display:block}.results>*{break-inside:avoid;margin-bottom:14px}.hero,.metric,.panel{border:1px solid #ccc;background:#fff;box-shadow:none}.hero *, .metric *, .panel *{color:black!important}.track{border:1px solid #ccc}.fill{background:#999!important}.formula{white-space:pre-wrap}}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <div class="eyebrow"><span class="dot"></span> MEIE3292 · Interactive Work Study Tool</div>
+  <h1>Machine <span>Servicing</span> Calculator</h1>
+  <p class="lead">Choose a servicing method, change any input, and instantly find the most economical number of machines per operator. View the comparison and full working for every machine assignment.</p>
+
+  <div class="tabs" role="tablist" aria-label="Servicing method">
+    <button id="random-tab" class="tab" role="tab" aria-selected="true" aria-controls="random-fields" type="button" data-mode="random">Random Servicing</button>
+    <button id="synchronous-tab" class="tab" role="tab" aria-selected="false" aria-controls="synchronous-fields" type="button" data-mode="synchronous">Synchronous Servicing</button>
+  </div>
+
+  <div class="layout">
+    <aside class="panel form-panel" aria-label="Calculator inputs"><div class="panel-pad">
+      <h2>Enter your values</h2>
+      <p class="small" id="form-description">Independent machine attention requests (binomial probability).</p>
+      <hr class="rule">
+      <div id="input-error" class="error" role="alert" aria-live="polite"></div>
+      <div id="random-fields" class="mode-group" role="tabpanel" aria-labelledby="random-tab">
+        <div class="form-section-title">Random servicing inputs</div>
+        <div class="form-fields">
+          <div class="field">
+            <label for="probability">Attention probability (p)</label>
+            <div class="input-box"><input type="number" id="probability" value="40" min="0" max="100" step="any" inputmode="decimal"><span class="unit">%</span></div>
+            <div class="help">Time a machine needs operator attention.</div>
+          </div>
+          <div class="qbar"><span>Unattended (q = 1 − p)</span><b id="probability-q">60%</b></div>
+          <div class="field">
+            <label for="random-rate">Production rate per productive machine-hour</label>
+            <div class="input-box"><input type="number" id="random-rate" placeholder="Optional (x)" min="0.000001" step="any" inputmode="decimal"><span class="unit">units/h</span></div>
+            <div class="help">Leave blank to show the professor's result as cost ÷ x.</div>
+          </div>
+        </div>
+      </div>
+      <div id="synchronous-fields" class="mode-group" role="tabpanel" aria-labelledby="synchronous-tab" hidden>
+        <div class="form-section-title">Synchronous servicing inputs</div>
+        <div class="form-fields">
+          <div class="field">
+            <label for="service-time">Operator service time (l)</label>
+            <div class="input-box"><input type="number" id="service-time" value="1" min="0.000001" step="any" inputmode="decimal"><span class="unit">min</span></div>
+            <div class="help">Loading, unloading, starting the machine.</div>
+          </div>
+          <div class="field">
+            <label for="machine-time">Automatic machine time (m)</label>
+            <div class="input-box"><input type="number" id="machine-time" value="3" min="0" step="any" inputmode="decimal"><span class="unit">min</span></div>
+            <div class="help">Time the machine runs without operator attention.</div>
+          </div>
+          <div class="field">
+            <label for="walk-time">Walking / other time (w)</label>
+            <div class="input-box"><input type="number" id="walk-time" value="0.1" min="0" step="any" inputmode="decimal"><span class="unit">min</span></div>
+            <div class="help">Additional operator time per machine visit.</div>
+          </div>
+          <div class="field">
+            <label for="units-per-cycle">Units per machine cycle</label>
+            <div class="input-box"><input type="number" id="units-per-cycle" value="1" min="0.000001" step="any" inputmode="decimal"><span class="unit">units</span></div>
+            <div class="help">Usually one finished unit per completed cycle.</div>
+          </div>
+        </div>
+      </div>
+      <hr class="rule">
+      <div class="form-section-title">Costs & comparison</div>
+      <div class="shared-fields">
+        <div class="field"><label for="operator-cost">Operator cost (K₁)</label><div class="input-box"><input type="number" id="operator-cost" value="12" min="0" step="any" inputmode="decimal"><span class="unit">/ hour</span></div></div>
+        <div class="field"><label for="machine-cost">Machine cost (K₂)</label><div class="input-box"><input type="number" id="machine-cost" value="20" min="0" step="any" inputmode="decimal"><span class="unit">/ hour</span></div></div>
+        <div class="field"><label for="hours">Work shift length</label><div class="input-box"><input type="number" id="hours" value="8" min="0.000001" step="any" inputmode="decimal"><span class="unit">hours</span></div></div>
+        <div class="field"><label for="max-machines">Compare up to</label><div class="input-box"><input type="number" id="max-machines" value="4" min="1" max="40" step="1" inputmode="numeric"><span class="unit">machines</span></div></div>
+        <div class="field"><label for="currency">Currency</label><div class="input-box"><select id="currency"><option value="$">USD ($)</option><option value="OMR">OMR</option><option value="SAR">SAR</option><option value="€">EUR (€)</option><option value="£">GBP (£)</option></select></div></div>
+      </div>
+      <div class="btn-row"><button id="calculate" class="btn primary" type="button">Calculate results</button><button id="reset" class="btn secondary" type="button">Reset</button></div>
+      <div class="note-text">Results update automatically as you edit. Click a table row to see its calculations.</div>
+    </div></aside>
+
+    <section class="results" id="results" aria-live="polite">
+      <div class="hero">
+        <div><div class="overline">Lowest cost assignment</div><div class="big"><span id="best-n">3</span> <small>machines / operator</small></div><p class="hero-note" id="hero-note">Economically optimal within the selected comparison range.</p></div>
+        <div class="hero-card"><div class="overline">Minimum cost per unit</div><div class="value" id="best-cost">—</div><div class="caption" id="best-cost-help">Lower is better</div></div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="label" id="stat1-label">Expected lost machine-hours</div><div class="value" id="stat1">—</div></div>
+        <div class="metric"><div class="label" id="stat2-label">Expected production</div><div class="value" id="stat2">—</div></div>
+        <div class="metric"><div class="label">Total cost per shift</div><div class="value" id="stat3">—</div></div>
+      </div>
+      <div class="panel"><div class="panel-pad"><div class="section-head"><div><h2>Cost comparison</h2><p class="small">Compare all machine assignments. The green bar is the cheapest.</p></div></div><div class="chart" id="chart"></div></div></div>
+      <div class="panel"><div class="panel-pad"><div class="section-head"><div><h2>Machine comparison table</h2><p class="small">Select any row to inspect the steps used to get the answer.</p></div><div class="section-actions"><button id="export" class="sm-btn" type="button">Export CSV</button><button id="print" class="sm-btn" type="button">Print</button></div></div><div class="table-scroll"><table><thead id="table-head"></thead><tbody id="table-body"></tbody></table></div></div></div>
+      <div class="panel"><div class="panel-pad"><div class="section-head"><div><h2>Step-by-step calculations</h2><p class="small" id="breakdown-desc">Selected machine assignment</p></div><select id="detail-select" class="selectbox" aria-label="Choose machine count for detailed calculations"></select></div><div id="random-cases"><div class="table-scroll"><table><thead><tr><th>m needing attention</th><th>Probability P(m)</th><th>Waiting machines</th><th>Lost hours</th></tr></thead><tbody id="case-body"></tbody></table></div></div><div id="synchronous-cases" hidden><div id="cycle-explanation" class="callout"></div></div><div class="formula" id="detail-formula"></div></div></div>
+    </section>
+  </div>
+  <p class="foot" id="method-foot"></p>
+</main>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const initial = { probability: '40', 'random-rate': '', 'service-time': '1', 'machine-time': '3', 'walk-time': '0.1', 'units-per-cycle': '1', 'operator-cost': '12', 'machine-cost': '20', hours: '8', 'max-machines': '4', currency: '$' };
+  const editable = Object.keys(initial);
+  let mode = 'random', comparison = [], current = null, selectedN = 3, winner = null;
+  const nfmt = (v, d=4) => Number(v).toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d});
+  const f = (v,d=5) => Number(Number(v).toFixed(d)).toString();
+  const money = (v, d=2) => current.currency === '$' || current.currency === '€' || current.currency === '£'
+    ? current.currency + Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d})
+    : current.currency + ' ' + Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+  const moneyCompact = v => money(v,2);
+  function choose(n, k){ k=Math.min(k,n-k); let c=1; for(let i=1;i<=k;i++)c=c*(n-k+i)/i; return c; }
+  function readRequired(id, min, max=Infinity, whole=false) {
+    const value = $(id).value.trim();
+    if (!value) throw new Error('Please enter a value for ' + $(''+id).closest('.field').querySelector('label').textContent + '.');
+    const v=Number(value);
+    if (!Number.isFinite(v) || v<min || v>max || (whole && !Number.isInteger(v))) throw new Error('Invalid input: ' + $(''+id).closest('.field').querySelector('label').textContent + '. Check the allowed range.');
+    return v;
+  }
+  function readInput(){
+    const args={K1:readRequired('operator-cost',0),K2:readRequired('machine-cost',0),hours:readRequired('hours',0.000000001),max:readRequired('max-machines',1,40,true),currency:$('currency').value};
+    if (!['$','OMR','SAR','€','£'].includes(args.currency)) throw new Error('Choose a valid currency.');
+    if (mode === 'random') {
+      args.p=readRequired('probability',0,100)/100;
+      args.q=1-args.p;
+      const rate=$('random-rate').value.trim();
+      args.rate=rate ? readRequired('random-rate',0.000000001) : null;
+    } else {
+      args.l=readRequired('service-time',0.000000001);
+      args.m=readRequired('machine-time',0);
+      args.w=readRequired('walk-time',0);
+      args.units=readRequired('units-per-cycle',0.000000001);
+    }
+    return args;
+  }
+  function calcRandom(n, a){
+    const cases=[];let lost=0;
+    for(let m=0;m<=n;m++){
+      const probability=choose(n,m)*(a.p**m)*(a.q**(n-m));
+      const waiting=Math.max(0,m-1), lostHours=probability*waiting*a.hours;
+      cases.push({m,probability,waiting,lostHours});lost+=lostHours;
+    }
+    const productive=n*a.hours-lost;
+    const shiftCost=a.hours*(a.K1+n*a.K2);
+    const ratePerHour=a.rate===null?null:productive*a.rate/a.hours;
+    const output=a.rate===null?null:productive*a.rate;
+    const costCoeff=shiftCost/productive;
+    return {n,cases,lost,productive,shiftCost,ratePerHour,output,costCoeff,unitCost:a.rate===null?null:costCoeff/a.rate,compareCost:costCoeff};
+  }
+  function calcSynchronous(n,a){
+    const ideal=(a.l+a.m)/(a.l+a.w);
+    const machineCycle=a.l+a.m,operatorRound=n*(a.l+a.w),cycle=Math.max(machineCycle,operatorRound);
+    const operatorIdle=Math.max(0,machineCycle-operatorRound),machineWait=Math.max(0,operatorRound-machineCycle);
+    const operatorUtil=operatorRound/cycle,machineUtil=machineCycle/cycle;
+    const ratePerHour=60*n*a.units/cycle,output=ratePerHour*a.hours;
+    const shiftCost=a.hours*(a.K1+n*a.K2);
+    const unitCost=shiftCost/output;
+    return {n,ideal,machineCycle,operatorRound,cycle,operatorIdle,machineWait,operatorUtil,machineUtil,ratePerHour,output,shiftCost,unitCost,compareCost:unitCost};
+  }
+  function costLabel(r){ return mode==='random' && current.rate===null?moneyCompact(r.costCoeff)+'/x':moneyCompact(r.unitCost); }
+  function outputLabel(r){return mode==='random'&&current.rate===null?nfmt(r.productive)+' × x':nfmt(r.output,2)+' units';}
+  function showError(msg){$('input-error').textContent=msg;$('input-error').style.display='block';}
+  function clearError(){$('input-error').style.display='none';}
+  function render(){
+    try {
+      const a=readInput();current=a;clearError();
+      comparison=Array.from({length:a.max},(_,i)=>mode==='random'?calcRandom(i+1,a):calcSynchronous(i+1,a));
+      winner=comparison.reduce((best,x)=>x.compareCost<best.compareCost-1e-12?x:best);
+      $('best-n').textContent=winner.n;
+      $('best-cost').textContent=costLabel(winner);
+      $('best-cost-help').textContent=mode==='random' && a.rate===null?'x = production rate in units per hour':'Cost per produced unit';
+      if(mode==='random') {
+        $('hero-note').textContent=`Compared 1–${a.max} machines. Random servicing assumes independent attention requests.`;
+        $('stat1-label').textContent='Expected lost machine-hours';
+        $('stat1').textContent=nfmt(winner.lost)+' h';
+        $('stat2-label').textContent=a.rate===null?'Expected productive machine-hours':'Expected production per shift';
+        $('stat2').textContent=a.rate===null?nfmt(winner.productive)+' h':nfmt(winner.output,2)+' units';
+      } else {
+        $('hero-note').textContent=`Ideal n′ = ${nfmt(winner.ideal,2)}. Economically best among 1–${a.max} machines.`;
+        $('stat1-label').textContent='Cycle time (per machine)';
+        $('stat1').textContent=nfmt(winner.cycle,3)+' min';
+        $('stat2-label').textContent='Production per shift';
+        $('stat2').textContent=nfmt(winner.output,2)+' units';
+      }
+      $('stat3').textContent=money(winner.shiftCost);
+      const maxCost=Math.max(...comparison.map(r=>r.compareCost),1e-10);
+      $('chart').innerHTML=comparison.map(r=>`<div class="chart-row ${r.n===winner.n?'win':''}"><span class="left">${r.n} ${r.n===1?'machine':'machines'}</span><div class="track"><div class="fill ${r.n===winner.n?'win':''}" style="width:${maxCost===0?0:(r.compareCost/maxCost*100).toFixed(2)}%"></div></div><span class="right">${costLabel(r)}</span></div>`).join('');
+      $('table-head').innerHTML = mode==='random'
+        ? '<tr><th>Machines</th><th>Lost hours</th><th>Production / shift</th><th>Total cost / shift</th><th>Cost / unit</th></tr>'
+        : '<tr><th>Machines</th><th>Cycle time (min)</th><th>Production / shift</th><th>Total cost / shift</th><th>Cost / unit</th></tr>';
+      $('table-body').innerHTML=comparison.map(r=>`<tr class="row ${r.n===winner.n?'best':''}" data-n="${r.n}" tabindex="0" aria-label="Show calculations for ${r.n} machines"><td>${r.n}${r.n===winner.n?'<span class="badge">Best</span>':''}</td><td>${mode==='random'?nfmt(r.lost):nfmt(r.cycle)}</td><td>${outputLabel(r)}</td><td>${money(r.shiftCost)}</td><td>${costLabel(r)}</td></tr>`).join('');
+      $('detail-select').innerHTML=comparison.map(r=>`<option value="${r.n}">${r.n} ${r.n===1?'machine':'machines'}</option>`).join('');
+      selectedN=Math.min(selectedN,a.max);
+      if (!comparison.some(r=>r.n===selectedN)) selectedN=winner.n;
+      displayDetails();
+    } catch(err){showError(err.message);}
+  }
+  function displayDetails(){
+    const r=comparison.find(r=>r.n===selectedN);if(!r||!current)return;
+    $('detail-select').value=String(selectedN);
+    $('breakdown-desc').textContent=`Full working for ${selectedN} ${selectedN===1?'machine':'machines'}`;
+    document.querySelectorAll('#table-body tr').forEach(tr=>tr.classList.toggle('chosen',Number(tr.dataset.n)===selectedN));
+    $('random-cases').hidden=mode!=='random';
+    $('synchronous-cases').hidden=mode!=='synchronous';
+    if(mode==='random') {
+      $('case-body').innerHTML=r.cases.map(c=>`<tr><td>${c.m}</td><td>${nfmt(c.probability,6)} (${nfmt(c.probability*100,2)}%)</td><td>${c.waiting}</td><td>${nfmt(c.lostHours)}</td></tr>`).join('');
+      const sum=r.cases.filter(c=>c.m>=2).map(c=>`${f(c.probability,6)} × ${c.waiting} × ${f(current.hours,3)}`).join(' + ')||'0';
+      const productiveUnits=current.rate===null?`${nfmt(r.productive)} × x units`:`${nfmt(r.productive)} × ${f(current.rate)} = ${nfmt(r.output,3)} units`;
+      $('detail-formula').textContent=`RANDOM SERVICING · n = ${r.n}\np = ${f(current.p)}; q = ${f(current.q)}\n\nP(m) = C(n,m) × p^m × q^(n−m)\nWaiting machines = max(0, m−1)\nLost hours for case m = P(m) × waiting machines × shift hours\n\nTotal lost hours = ${sum}\n                 = ${nfmt(r.lost)} machine-hours\n\nAvailable hours = ${r.n} × ${f(current.hours)} = ${nfmt(r.n*current.hours)}\nProductive hours = ${nfmt(r.n*current.hours)} − ${nfmt(r.lost)} = ${nfmt(r.productive)}\nTotal production = ${productiveUnits}\n\nShift cost = ${f(current.hours)} × (${f(current.K1)} + ${r.n} × ${f(current.K2)}) = ${money(r.shiftCost)}\nTEC = shift cost / total production = ${costLabel(r)}`;
+    } else {
+      $('cycle-explanation').textContent=r.operatorIdle>1e-9
+        ? `Machine-limited: the operator waits ${nfmt(r.operatorIdle,3)} minute(s) each round. Machines do not wait for the operator.`
+        : r.machineWait>1e-9
+        ? `Operator-limited: each machine waits ${nfmt(r.machineWait,3)} minute(s) per cycle for operator attention.`
+        : 'Balanced cycle: the operator round and the machine cycle take the same time. No scheduled waiting.';
+      $('detail-formula').textContent=`SYNCHRONOUS SERVICING · n = ${r.n}\nl = ${f(current.l)} min; m = ${f(current.m)} min; w = ${f(current.w)} min\n\nIdeal number n′ = (l + m) / (l + w)\n                = (${f(current.l)} + ${f(current.m)}) / (${f(current.l)} + ${f(current.w)})\n                = ${nfmt(r.ideal,4)} machines\n\nMachine cycle = l + m = ${nfmt(r.machineCycle,4)} min\nOperator round = n × (l + w) = ${nfmt(r.operatorRound,4)} min\nActual cycle = max(machine cycle, operator round)\n             = ${nfmt(r.cycle,4)} min\n\nOperator idle per round = ${nfmt(r.operatorIdle,4)} min\nMachine wait per machine per cycle = ${nfmt(r.machineWait,4)} min\nOperator utilization = ${nfmt(r.operatorUtil*100,2)}%\nMachine cycle utilization = ${nfmt(r.machineUtil*100,2)}%\n\nProduction rate R = (n × units/cycle × 60) / actual cycle\n                  = (${r.n} × ${f(current.units)} × 60) / ${nfmt(r.cycle)}\n                  = ${nfmt(r.ratePerHour,4)} units/hour\nShift output = ${nfmt(r.ratePerHour,4)} × ${f(current.hours)} = ${nfmt(r.output,3)} units\n\nHourly cost = K₁ + nK₂ = ${f(current.K1)} + ${r.n} × ${f(current.K2)} = ${money(current.K1+r.n*current.K2)} /h\nShift cost = ${f(current.hours)} × hourly cost = ${money(r.shiftCost)}\nTEC = hourly cost / R = ${costLabel(r)} per unit`;
+    }
+  }
+  function switchMode(next){
+    if (!['random','synchronous'].includes(next)) return;
+    mode=next;selectedN=3;
+    $('random-fields').hidden=next!=='random';$('synchronous-fields').hidden=next!=='synchronous';
+    $('random-tab').setAttribute('aria-selected',String(next==='random'));
+    $('synchronous-tab').setAttribute('aria-selected',String(next==='synchronous'));
+    $('form-description').textContent=next==='random'?'Independent machine attention requests (binomial probability).':'Fixed service, machine and walking times (deterministic cycles).';
+    $('method-foot').innerHTML=next==='random'
+      ? '<strong>Random servicing method:</strong> P(m) = C(n,m)p<sup>m</sup>q<sup>n−m</sup>. Waiting machine-hours = H × Σ P(m)max(m−1,0). TEC = total shift cost / expected shift production. This is the simplified approximation used in Tutorial 07. Assumes one operator and independent machine attention requests.'
+      : '<strong>Synchronous servicing method:</strong> n′ = (l+m)/(l+w); cycle time = max(l+m, n(l+w)); production/hour = 60 × n × units/cycle ÷ cycle time; TEC = hourly labor and machine cost ÷ output/hour. Assumes identical machines, repeated deterministic cycles and one operator. Source: <a href="https://oeelab.com/machines-per-operator-calculator" target="_blank" rel="noopener noreferrer">Synchronous servicing formula reference</a>.';
+    render();
+  }
+  function updateQ(){
+    const str=$('probability').value.trim(),p=Number(str);
+    $('probability-q').textContent=str!==''&&Number.isFinite(p)&&p>=0&&p<=100?f(100-p,4)+'%':'—';
+  }
+  function exportCSV(){
+    if(!comparison.length||!current||$('input-error').style.display==='block')return;
+    const head=mode==='random'
+      ? ['Machines','Lost machine-hours','Productive machine-hours','Shift output (if rate entered)','Shift cost','Cost coefficient (divide by x)','Unit cost (if rate entered)']
+      : ['Machines','Ideal n','Cycle time (min)','Operator idle (min)','Machine wait (min)','Production/hour','Shift output','Shift cost','Unit cost'];
+    const rows=mode==='random'
+      ? comparison.map(r=>[r.n,r.lost,r.productive,r.output??'',r.shiftCost,r.costCoeff,r.unitCost??''])
+      : comparison.map(r=>[r.n,r.ideal,r.cycle,r.operatorIdle,r.machineWait,r.ratePerHour,r.output,r.shiftCost,r.unitCost]);
+    const csv=[head,...rows].map(row=>row.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\r\n');
+    const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+    const link=document.createElement('a');link.href=url;link.download=mode+'_servicing_results.csv';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+  }
+  for(const tab of document.querySelectorAll('.tab')) tab.addEventListener('click',()=>switchMode(tab.dataset.mode));
+  for(const id of editable) $(id).addEventListener('input',()=>{if(id==='probability')updateQ();render();});
+  $('calculate').addEventListener('click',render);
+  $('reset').addEventListener('click',()=>{for(const [id,value] of Object.entries(initial)) $(id).value=value;updateQ();selectedN=3;render();});
+  $('detail-select').addEventListener('change',event=>{selectedN=Number(event.target.value);displayDetails();});
+  $('table-body').addEventListener('click',event=>{const tr=event.target.closest('tr[data-n]');if(tr){selectedN=Number(tr.dataset.n);displayDetails();}});
+  $('table-body').addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){const tr=event.target.closest('tr[data-n]');if(tr){event.preventDefault();selectedN=Number(tr.dataset.n);displayDetails();}}});
+  $('export').addEventListener('click',exportCSV);
+  $('print').addEventListener('click',()=>window.print());
+  switchMode('random');
+})();
+</script>
+</body>
+</html>
